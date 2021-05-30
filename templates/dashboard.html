@@ -1,0 +1,93 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Dashboard
+{% endblock %}
+
+{% block body %}
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <!-- <h1 class="display-3">About Loan Restructure</h1>
+        <p class="lead">
+            Loan Restructure in an app built by Strategy and Research. 
+            It is an answer to the bank's initiative to help clients and loan officers to easily restructure loans
+            at a reduced cost in this covid times.
+        </p>         -->
+        <h1 class="display-3">Cross Sell Dashboard</h1>
+        <small>Welcome, {{session.username.replace(".", " ").title()}}</small>
+        <p class="lead">
+            Cross Sell is an app built by Innovation Committee. 
+            It is an answer to the bank's initiative to enable staff to easily cross sell bank 
+            products and engage HR on Staff Welfare issues.
+        </p>
+
+        <p>
+            <a class="btn btn-success" href="/dashboard_crosssells">Cross Sell Dashboard</a>
+            <a class="btn btn-success" href="/dashboard_hrissues">HR Issue Dashboard</a>
+        </p>
+
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-sm-6">
+        
+        <p></p>
+        <!-- <table class="table table-striped">
+            <tr>
+                <th>ID</th>
+                <th>Created By</th>
+                <th>PF Number</th> 
+                <th>Customer Account</th>
+                <th>Product</th>
+                <th>Crosssell Type</th>
+                <th>Creation Date</th>
+                <th></th>
+                <th></th>
+            </tr>
+            {% for crosssell in crosssells %}
+            <tr>
+                <td>{{crosssell.id}}</td>
+                <td>{{crosssell.name}}</td>
+                <td>{{crosssell.pf_number}}</td>
+                <td>{{crosssell.customer_account}}</td>
+                <td>{{crosssell.product}}</td>
+                <td>{{crosssell.crosssell_type}}</td>
+                <td>{{crosssell.submission_date}}</td>
+                <td><a href="edit_crosssell/{{crosssell.id}}" class="btn btn-info" pull-right>Edit</a></td>
+                <td><a href="#" class="btn btn-danger">Delete</a></td>
+            </tr>
+            {% endfor %}
+        </table> -->
+    </div>
+
+    <div class="col-sm-6">
+        
+        <p></p>
+        <!-- <table class="table table-striped">
+            <tr>
+                <th>ID</th>
+                <th>Created By</th>
+                <th>Topic</th>
+                <th>Creation Date</th>
+                <th></th>
+                <th></th>
+            </tr>
+            {% for hrissue in hrissues %}
+            <tr>
+                <td>{{hrissue.id}}</td>
+                <td>{{hrissue.name}}</td>
+                <td>{{hrissue.topic}}</td>
+                <td>{{hrissue.submission_date}}</td>
+                <td><a href="edit_hrissue/{{hrissue.id}}" class="btn btn-info" pull-right>Edit</a></td>
+                <td><a href="#" class="btn btn-danger">Delete</a></td>
+            </tr>
+            {% endfor %}
+        </table> -->
+    </div>
+
+</div>
+
+</div>
+{% endblock %}

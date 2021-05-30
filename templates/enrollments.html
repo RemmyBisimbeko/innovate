@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Enrollments
+{% endblock %}
+
+{% block body %}
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-3">Card Enrollments</h1>     
+    </div>
+</div>
+<ul class="list-group">
+    {% for enrollment in enrollments %}
+        <li class="list-group-item">
+            <a href="/enrollment/{{enrollment.id}}">{{ enrollment.name}} - {{ enrollment.account }}</a>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

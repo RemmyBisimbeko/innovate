@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Cross Sell
+{% endblock %}
+
+{% block body %}
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-3">{{crosssell.product}}</h1> 
+        <small>Created by {{crosssell.name.replace(".", " ").title()}} - {{crosssell.pf_number}} on {{crosssell.submission_date}}</small>  
+        <p></p>
+        <h4>Customer Account - {{crosssell.customer_account}}</h4>
+        <h5>Cross Sell Type - {{crosssell.crosssell_type}}</h5>
+        <h5>Branch - {{crosssell.branch}}</h5>
+
+        <div>
+            {{crosssell.naration | safe }}
+        </div>
+
+    </div>
+</div>
+
+<ul class="list-group">
+    {% for crosssell in crosssells %}
+        <li class="list-group-item">
+            <a href="/crosssell/{{crosssell.id}}">{{ crosssell.name}} - {{ crosssell.account }}</a>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

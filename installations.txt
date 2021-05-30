@@ -1,0 +1,110 @@
+___________________________
+$ pip install flask-mysqldb
+----------------------
+the easiest way to install mysql I found is to use brew:
+-----
+$ brew install mysql
+$ brew tap homebrew/services
+To have launchd start mysql now and restart at login:
+$ brew services start mysql
+# To restart MySQL
+$ brew services restart mysql 
+if you don't want/need a background service you can just run:
+$ mysql.server start
+------
+in the project folder you do 
+We've installed your MySQL database without a root password. To secure it run:
+$ mysql_secure_installation
+To connect run:
+$  mysql -uroot 
+OR
+$ mysql -u root -p
+enter your password. that enters mysql.
+12345etc
+
+--------------------------
+1. go to apple icon --> system preferences
+2. open Mysql
+3. n instances you will see "initialize Database"
+4. click on that
+5. you will be asked to set password for root --> set a strong password there
+6. use that password to login in mysql from next time
+Hope this helps.
+
+------------------------
+app.config['MYSQL_USERNAME']='root' should be app.config['MYSQL_USER']='root' . MacOS, 2019.4
+--------------------------
+______________________________
+
+DATABASE
+#Show Databases
+$SHOW DATABASES
+
+$CREATE DATABASE <DBNAME>
+$USE <DBNAME>
+
+#Create Users Table
+CREATE TABLE users
+(id INT(11) AUTO_INCREMENT PRIMARY KEY, 
+name VARCHAR(100), 
+email VARCHAR(30), 
+username VARCHAR(30), 
+password VARCHAR(100), 
+register_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+
+--Users Table
+CREATE TABLE users(id INT(11) AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100), email VARCHAR(50), username VARCHAR(30), password VARCHAR(100), register_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+--Enrollments Table
+CREATE TABLE enrollments(id INT(11) AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), account VARCHAR(50), branch VARCHAR(30), telephone VARCHAR(30), email VARCHAR(50), officer VARCHAR(50), reason VARCHAR(255), submission_date DATE);
+--Cross Sell Table
+CREATE TABLE crosssells(id INT(11) AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), pf_number VARCHAR(6), branch VARCHAR(30), customer_account VARCHAR(50), product VARCHAR(30),crosssell_type VARCHAR(30), naration VARCHAR(255), submission_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+--Applications Table
+CREATE TABLE applications(id INT(11) AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), account VARCHAR(50), branch VARCHAR(30), telephone VARCHAR(30), email VARCHAR(50), officer VARCHAR(50), reason VARCHAR(255), submission_date DATE);
+--hrissues
+CREATE TABLE hrissues(id INT(11) AUTO_INCREMENT PRIMARY KEY, issue_type VARCHAR(50), name VARCHAR(50), pf_number VARCHAR(6), branch VARCHAR(30), topic VARCHAR(30), hrissue VARCHAR(255), submission_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+--restructures Table
+CREATE TABLE restructures(id INT(11) AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), account VARCHAR(50), branch VARCHAR(30), telephone VARCHAR(30), email VARCHAR(50), officer VARCHAR(50), reason VARCHAR(255), submission_date DATE);
+
+--insert into crosssells
+"INSERT INTO crosssells(pf_number, branch, customer_account, product, crosssell_type, naration, submission_date, name)
+VALUES(%s, %s, %s, %s, %s, %s, %s, %s)", (pf_number, branch, customer_account, product, crosssell_type, naration, submission_date, session['username'])
+
+--insert into hrissues
+"INSERT INTO hrissues(pf_number, branch, topic, issue_type, hrissue, name)
+VALUES(%s, %s, %s, %s, %s, %s)", (pf_number, branch, topic, issue_type, hrissue, submission_date, session['username'])
+
+--
+$ SHOW TABLES;
+DROP TABLES;
+DESCRIBE USERS;
+
+Table + App
+
+________________
+Install mysql client
+$ brew install mysql-client
+OR
+$ pip install mysqlclient 
+OR 
+$ pipenv install mysqlclient
+
+
+MODULES
+Flask mysql db
+$ pip install flask-mysqldb
+
+WTForms for Form Validatoin
+$ pip install Flask-WTF
+
+PassLib for Hasjing Passwords
+$ pip install passlib
+
+
+mysql://ba0f988603553d:d04581fa@us-cdbr-east-03.cleardb.com/heroku_e0a2a7447beb862?reconnect=true
+
+
+
+
+
+
+    

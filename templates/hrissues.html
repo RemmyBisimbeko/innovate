@@ -1,0 +1,34 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    HR Issues
+{% endblock %}
+
+{% block body %}
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <!-- <h1 class="display-3">About Loan Restructure</h1>
+        <p class="lead">
+            Loan Restructure in an app built by Strategy and Research. 
+            It is an answer to the bank's initiative to help clients and loan officers to easily restructure loans
+            at a reduced cost in this covid times.
+        </p>         -->
+        <h1 class="display-3">HR Issues</h1>
+        <p class="lead">
+            Engage HR on all Staff Welfare issues.
+        </p>
+    </div>
+</div>
+
+<a class="btn btn-success" href="/add_hrissue">Add HR Issue</a>
+<p></p>
+
+<ul class="list-group">
+    {% for hrissue in hrissues %}
+        <li class="list-group-item">
+            <a href="/hrissue/{{hrissue.id}}">{{ hrissue.name}} - {{ hrissue.pf_number }}</a>
+        </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
