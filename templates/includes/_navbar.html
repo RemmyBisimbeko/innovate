@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
-  <a class="navbar-brand" href="/">Cross Sell</a>
+  <a class="navbar-brand" href="/">Innovate</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -13,10 +13,7 @@
         <a class="nav-link" href="/about">About</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/crosssells">Cross Sell</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/hrissues">HR Issues</a>
+        <a class="nav-link" href="/add_crosssell">Do Assessment</a>
       </li>
       <!-- <li class="nav-item">
         <a class="nav-link" href="/restructures">Restructures</a>
@@ -38,25 +35,15 @@
 
         <div class="dropdown">
           <button class="btn btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Dashboards
+            {{session.username.replace(".", " ").title()}}
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <!-- <a class="dropdown-item" href="/dashboard">Main Dashboard</a> -->
-            <a class="dropdown-item" href="/dashboard_crosssells">Cross Sell Dashboard</a>
-            <a class="dropdown-item" href="/dashboard_hrissues">HR Issues Dashboard</a>
+            <a class="dropdown-item" href="/crosssells">Assessments</a>
+            <a class="dropdown-item" href="/logout">Logout</a>
           </div>
         </div>
 
-        <li class="nav-item">
-          <a class="nav-link" href="/logout">Logout</a>
-        </li>
-      {% else %}
-        <li class="nav-item">
-          <a class="nav-link" href="/register">Register</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/login">Login</a>
-        </li>
       {% endif %}
     </ul>
   </div>

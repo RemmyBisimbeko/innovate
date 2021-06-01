@@ -2,21 +2,35 @@
 
 {% block body %}
 <div class="container">
-  <h1>Add Cross Sell</h1>
+  <h1>Self Assessment</h1>
   {% from "includes/_formhelpers.html" import render_field %}
   <form method="POST" action="">
-    <div class="form-group">
-        {{ render_field(form.pf_number, class_="form-control", placeholder='e.g. BR4805') }}
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                {{ render_field(form.pf_number, class_="form-control", placeholder='e.g. BR4805') }}
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                {{ render_field(form.branch, class_="form-control") }}
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        {{ render_field(form.branch, class_="form-control") }}
+
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                {{ render_field(form.customer_account, class_="form-control") }}
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                {{ render_field(form.product, class_="form-control") }}
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        {{ render_field(form.customer_account, class_="form-control") }}
-    </div>
-    <div class="form-group">
-        {{ render_field(form.product, class_="form-control") }}
-    </div>
+
     <div class="form-group">
         {{ render_field(form.crosssell_type, class_="form-control", placeholder='e.g. Enrolment, Usage, Reactivation') }}
     </div>
@@ -25,5 +39,23 @@
     </div>
     <p><input class="btn btn-primary" type="submit" value="Submit">
   </form>
+
+
+  <nav aria-label="...">
+    <ul class="pagination">
+      <li class="page-item disabled">
+        <a class="page-link" href="#" tabindex="-1">Previous</a>
+      </li>
+      <li class="page-item"><a class="page-link" href="#">1</a></li>
+      <li class="page-item active">
+        <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="page-item"><a class="page-link" href="#">3</a></li>
+      <li class="page-item">
+        <a class="page-link" href="#">Next</a>
+      </li>
+    </ul>
+  </nav>
+  
 </div>
 {% endblock %}
