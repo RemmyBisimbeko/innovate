@@ -1,9 +1,6 @@
 import os
 from flask import Flask, render_template, flash, redirect, url_for, session, request, logging
-# from RestructuresData import Restructures
-# from ApplicationsData import Applications
-# from EnrollmentsData import Enrollments
-# from CrosssellsData import Crosssells
+
 
 from flask_mysqldb import MySQL
 # Import wtforms and  Each Type of Field to be used
@@ -27,92 +24,50 @@ app.config['MYSQL_CURSORCLASS'] = os.environ.get("MYSQL_CURSORCLASS")
 # Init MySQL
 mysql = MySQL(app)
 
-
-# Create Variable equal to Function imported 
-# Restructures = Restructures()
-# Applications = Applications()
-# Enrollments = Enrollments()
-# Crosssells = Crosssells()
-
 # Home Route
 @app.route('/')
 def home():
     return render_template('home.html')
 
-# Cross Sells Route
-@app.route('/crosssells')
-def crosssells():
-    # Create  Cursor
-    cur = mysql.connection.cursor()
-
-    # Get Cross Sells
-    result = cur.execute("SELECT * FROM crosssells")
-
-    # Set Cross Sell Variable and set it to all in Dictionary form
-    crosssells = cur.fetchall()
-
-    if result > 0:
-        return render_template('crosssells.html', crosssells=crosssells)
-    else:
-        msg = 'No Cross Sells Yet'
-        return render_template('crosssells.html', msg=msg)
-
-    # Close Connection
-    cur.close()
-
-# Single Cross Sell Route
-@app.route('/crosssell/<string:id>')
-def crosssell(id):
-    # Create  Cursor
-    cur = mysql.connection.cursor()
-
-    # Get Cross Sell
-    result = cur.execute("SELECT * FROM crosssells WHERE id=%s", [id ])
-
-    # Set Cross Sell Variable and set it to all in Dictionary form
-    crosssell = cur.fetchone()
-
-    return render_template('crosssell.html', crosssell=crosssell)
-
-# Single HR Issue Route
-@app.route('/hrissue/<string:id>')
-def hrissue(id):
-    # Create  Cursor
-    cur = mysql.connection.cursor()
-
-    # Get HR Issue
-    result = cur.execute("SELECT * FROM hrissues WHERE id=%s", [id ])
-
-    # Set HR Issues Variable and set it to all in Dictionary form
-    hrissue = cur.fetchone()
-
-    return render_template('hrissue.html', hrissue=hrissue)
-
-# HR Issues Route
-@app.route('/hrissues')
-def hrissues():
-     # Create  Cursor
-    cur = mysql.connection.cursor()
-
-    # Get HR Issues
-    result = cur.execute("SELECT * FROM hrissues")
-
-    # Set HR Issue Variable and set it to all in Dictionary form
-    hrissues = cur.fetchall()
-
-    if result > 0:
-        return render_template('hrissues.html', hrissues=hrissues)
-    else:
-        msg = 'No HR Issues Yet'
-        return render_template('hrissues.html', msg=msg)
-
-    # Close Connection
-    cur.close()
-
 # About Route
 @app.route('/about')
 def about():
     return render_template('about.html')
+
+# Assessments Route
+@app.route('/assessments')
+def assessments():
+    # Create  Cursor
+    cur = mysql.connection.cursor()
+
+    # Get Assessments
+    result = cur.execute("SELECT * FROM assessments")
+
+    # Set Assessment Variable and set it to all in Dictionary form
+    assessments = cur.fetchall()
+
+    if result > 0:
+        return render_template('assessments.html', assessments=assessments)
+    else:
+        msg = 'No Assessments Yet'
+        return render_template('assessments.html', msg=msg)
+
+    # Close Connection
+    cur.close()
+
+# Single Assessment Route
+@app.route('/assessment/<string:id>')
+def assessment(id):
+    # Create  Cursor
+    cur = mysql.connection.cursor()
+
+    # Get Assessment
+    result = cur.execute("SELECT * FROM assessments WHERE id=%s", [id ])
+
+    # Set Assessment Variable and set it to all in Dictionary form
+    assessment = cur.fetchone()
+
+    return render_template('assessment.html', assessment=assessment)
 
 # Register Form Class
 class RegisterForm(Form):
@@ -208,7 +163,7 @@ def is_logged_in(f):
         if 'logged_in' in session:
             return f(*args, **kwargs)
         else:
-            flash('You are not Authorised, Please login', 'danger')
+            flash('This action is not Authorised, Please login', 'danger')
             return redirect(url_for('login'))
     return wrap
 
@@ -220,46 +175,24 @@ def logout():
     flash('You are now logged out', 'success')
     return redirect(url_for('login'))
 
-# Cross Sell Dashboard Route
+# Assessment Dashboard Route
 @app.route('/dashboard_crosssells')
 @is_logged_in
 def dashboard_crosssells():
     # Create  Cursor
     cur = mysql.connection.cursor()
 
-    # Get Cross Sells 
-    result = cur.execute("SELECT * FROM crosssells")
+    # Get Assessments 
+    result = cur.execute("SELECT * FROM crosssells where name= %s", session['username'])
 
-    # Set Cross Sell Variable and set it to all in Dictionary form
+    # Set Assessment Variable and set it to all in Dictionary form
     crosssells = cur.fetchall()
 
     if result > 0:
         return render_template('dashboard_crosssells.html', crosssells=crosssells)
     else:
-        msg = 'No Cross Sells Yet'
+        msg = 'No Assessments Yet'
         return render_template('dashboard_crosssells.html', msg=msg)
-
-    # Close Connection
-    cur.close()
-
-# HR Issues Dashboard Route
-@app.route('/dashboard_hrissues')
-@is_logged_in
-def dashboard_hrissues():
-    # Create  Cursor
-    cur = mysql.connection.cursor()
-
-    # Get Cross Sells 
-    result = cur.execute("SELECT * FROM hrissues")
-
-    # Set Cross Sell Variable and set it to all in Dictionary form
-    hrissues = cur.fetchall()
-
-    if result > 0:
-        return render_template('dashboard_hrissues.html', hrissues=hrissues)
-    else:
-        msg = 'No HR Issues Yet'
-        return render_template('dashboard_hrissues.html', msg=msg)
 
     # Close Connection
     cur.close()
@@ -270,30 +203,20 @@ def dashboard_hrissues():
 def dashboard():
     return render_template('dashboard.html')
 
-# Add Cross Sell Form Class
-class CrosssellForm(Form):
+# Add Assessment Form Class
+class AssessmentForm(Form):
     pf_number = StringField('pf_number', [validators.Length(min=1, max=6)])
     branch = StringField('branch', [validators.Length(min=1, max=50)])
     customer_account = StringField('customer_account', [validators.Length(min=1, max=20)])
     product = StringField('product', [validators.Length(min=1, max=20)])
     crosssell_type = StringField('crosssell_type', [validators.Length(min=1, max=20)])
     naration = TextAreaField('naration', [validators.Length(min=10)])
-    # submission_date = StringField('submission_date', [validators.Length(min=1, max=20)])
 
-    # username = StringField('Username', [validators.Length(min=4, max=25)])
-    # username = StringField('Username', [validators.Length(min=4, max=25)])
-    # email = StringField('Email', [validators.Length(min=6, max=50)])
-    # password = PasswordField('Password', [
-    #     validators.DataRequired(),
-    #     validators.EqualTo('confirm', message='Passwords do not match')
-    # ])
-    # confirm = PasswordField('Confirm Password')
-
-# Add Crosssell Route  
-@app.route('/add_crosssell', methods=['GET', 'POST'])
+# Do Assessment Route  
+@app.route('/do_assessment', methods=['GET', 'POST'])
 @is_logged_in
-def add_crosssell():
-    form = CrosssellForm(request.form)
+def do_assessment():
+    form = AssessmentForm(request.form)
     if request.method == 'POST' and form.validate():
         pf_number = form.pf_number.data
         branch = form.branch.data
@@ -307,7 +230,7 @@ def add_crosssell():
         cur = mysql.connection.cursor()
 
         # Execute 
-        cur.execute("INSERT INTO crosssells(pf_number, branch, customer_account, product, crosssell_type, naration, name) VALUES(%s, %s, %s, %s, %s, %s, %s)", (pf_number, branch, customer_account, product, crosssell_type, naration, session['username']))
+        cur.execute("INSERT INTO assessments(pf_number, branch, customer_account, product, crosssell_type, naration, name) VALUES(%s, %s, %s, %s, %s, %s, %s)", (pf_number, branch, customer_account, product, crosssell_type, naration, session['username']))
 
         # Commit to DB
         mysql.connection.commit()
@@ -315,11 +238,43 @@ def add_crosssell():
         # Close Connection
         cur.close()
 
-        flash('Your cross sell was made successfully', 'success')
+        flash('Page 1 was completed successfully', 'success')
 
         return redirect(url_for('dashboard_crosssells'))
 
-    return render_template('add_crosssell.html', form=form)
+    return render_template('do_assessment_page_2.html', form=form)
+
+# Do Assessment - Page 3 Route  
+@app.route('/do_assessment_page_3', methods=['GET', 'POST'])
+@is_logged_in
+def do_assessment_page_3():
+    form = AssessmentForm(request.form)
+    if request.method == 'POST' and form.validate():
+        pf_number = form.pf_number.data
+        branch = form.branch.data
+        customer_account = form.customer_account.data
+        product = form.product.data
+        crosssell_type = form.crosssell_type.data
+        naration = form.naration.data
+        # submission_date = form.submission_date.data
+
+        # Create Cursor
+        cur = mysql.connection.cursor()
+
+        # Execute 
+        cur.execute("INSERT INTO assessments(pf_number, branch, customer_account, product, crosssell_type, naration, name) VALUES(%s, %s, %s, %s, %s, %s, %s)", (pf_number, branch, customer_account, product, crosssell_type, naration, session['username']))
+
+        # Commit to DB
+        mysql.connection.commit()
+
+        # Close Connection
+        cur.close()
+
+        flash('Your Assessment was captured successfully', 'success')
+
+        return redirect(url_for('dashboard_crosssells'))
+
+    return render_template('do_assessment.html', form=form)
 
 # Edit Crosssell Route  
 @app.route('/edit_crosssell/<string:id>', methods=['GET', 'POST'])
@@ -329,15 +284,15 @@ def edit_crosssell(id):
     # Create Cursor
     cur = mysql.connection.cursor()
 
-    # Get Cross sell by id
+    # Get Assessment by id
     result = cur.execute("SELECT * FROM crosssells WHERE id = %s", [id])
 
     crosssell = cur.fetchone()
 
     # Get Form
-    form = CrosssellForm(request.form)
+    form = AssessmentForm(request.form)
 
-    # Populate Cross sell form fields
+    # Populate Assessment form fields
     form.pf_number.data = crosssell['pf_number']
     form.branch.data = crosssell['branch']
     form.customer_account.data = crosssell['customer_account']
@@ -367,13 +322,13 @@ def edit_crosssell(id):
         # Close Connection
         cur.close()
 
-        flash('Your cross sell was updated successfully', 'success')
+        flash('Your Assessment was updated successfully', 'success')
 
         return redirect(url_for('dashboard_crosssells'))
 
     return render_template('edit_crosssell.html', form=form)
 
-# Delete Cross Sell
+# Delete Assessment
 @app.route('/delete_crosssell/<string:id>', methods=['POST'])
 @is_logged_in 
 def delete_crosssell(id):
@@ -389,150 +344,9 @@ def delete_crosssell(id):
         # Close Connection
         cur.close()
 
-        flash('Your cross sell was deleted successfully', 'success')
+        flash('Your Assessment was deleted successfully', 'success')
 
         return redirect(url_for('dashboard_crosssells'))
-
-# Add HR Issue Form Class
-class HrissueForm(Form):
-    pf_number = StringField('pf_number', [validators.Length(min=1, max=6)])
-    branch = StringField('branch', [validators.Length(min=1, max=50)])
-    topic = StringField('topic', [validators.Length(min=1, max=20)])
-    issue_type = StringField('issue_type', [validators.Length(min=1, max=20)])
-    hrissue = TextAreaField('hrissue', [validators.Length(min=10)])
-
-# Add HR Issue Route  
-@app.route('/add_hrissue', methods=['GET', 'POST'])
-@is_logged_in
-def add_hrissue():
-    form = HrissueForm(request.form)
-    if request.method == 'POST' and form.validate():
-        pf_number = form.pf_number.data
-        branch = form.branch.data
-        topic = form.topic.data
-        issue_type = form.issue_type.data
-        hrissue = form.hrissue.data
-        # submission_date = form.submission_date.data
-
-        # Create Cursor
-        cur = mysql.connection.cursor()
-
-        # Execute 
-        cur.execute("INSERT INTO hrissues(pf_number, branch, topic, issue_type, hrissue, name)VALUES(%s, %s, %s, %s, %s, %s)", (pf_number, branch, topic, issue_type, hrissue, session['username']))
-
-        # Commit to DB
-        mysql.connection.commit()
-
-        # Close Connection
-        cur.close()
-
-        flash('Your HR issue was made successfully', 'success')
-
-        return redirect(url_for('dashboard_hrissues'))
-
-    return render_template('add_hrissue.html', form=form)
-
-# Edit HRissue Route  
-@app.route('/edit_hrissue/<string:id>', methods=['GET', 'POST'])
-@is_logged_in
-def edit_hrissue(id):
-
-    # Create Cursor
-    cur = mysql.connection.cursor()
-
-    # Get Cross sell by id
-    result = cur.execute("SELECT * FROM hrissues WHERE id = %s", [id])
-
-    hrissue = cur.fetchone()
-
-    # Get Form
-    form = HrissueForm(request.form)
-
-    # Populate HR Issue form fields
-    form.pf_number.data = hrissue['pf_number']
-    form.branch.data = hrissue['branch']
-    form.topic.data = hrissue['topic']
-    form.issue_type.data = hrissue['issue_type']
-    form.hrissue.data = hrissue['hrissue']
-
-    if request.method == 'POST' and form.validate():
-        pf_number = request.form['pf_number']
-        branch = request.form['branch']
-        topic = request.form['topic']
-        issue_type = request.form['issue_type']
-        hrissue = request.form['hrissue']
-        # submission_date = '2020-08-31 23:38:49'
-        # name = session['username']
-
-        # Create Cursor
-        cur = mysql.connection.cursor()
-
-        # Execute 
-        cur.execute("UPDATE hrissues SET pf_number=%s, branch=%s, topic=%s, issue_type=%s, hrissue=%s WHERE id=%s", (pf_number, branch, topic, issue_type, hrissue, id))
-
-        # Commit to DB
-        mysql.connection.commit()
-
-        # Close Connection
-        cur.close()
-
-        flash('Your HR issue was updated successfully', 'success')
-
-        return redirect(url_for('dashboard_hrissues'))
-
-    return render_template('edit_hrissue.html', form=form)
-
-# Delete HR Issue
-@app.route('/delete_hrissue/<string:id>', methods=['POST'])
-@is_logged_in 
-def delete_hrissue(id):
-    # Create Cursor
-        cur = mysql.connection.cursor()
-
-        # Execute 
-        cur.execute("DELETE FROM hrissues WHERE id=%s", [id])
-
-        # Commit to DB
-        mysql.connection.commit()
-
-        # Close Connection
-        cur.close()
-
-        flash('Your HR Issue was deleted successfully', 'success')
-
-        return redirect(url_for('dashboard_hrissues'))
-
-
-
-# Restructures Route
-@app.route('/restructures')
-def restructures():
-    return render_template('restructures.html', restructures = Restructures)
-
-# Single Restructure Route
-@app.route('/restructure/<string:id>')
-def restructure(id):
-    return render_template('restructure.html', id=id)
-
-# Applications Route
-@app.route('/applications')
-def applications():
-    return render_template('applications.html', applications = Applications)
-
-# Single Application Route
-@app.route('/application/<string:id>')
-def application(id):
-    return render_template('application.html', id=id)
-
-# Enrollments Route
-@app.route('/enrollments')
-def enrollments():
-    return render_template('enrollments.html', enrollments = Enrollments)
-
-# Single Enrollment Route
-@app.route('/enrollment/<string:id>')
-def enrollment(id):
-    return render_template('enrollment.html', id=id)
 
 # Run Server
 if __name__ == '__main__':
