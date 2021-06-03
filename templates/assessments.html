@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-    Cross Sells Dashboard
+    Assessments
 {% endblock %}
 
 {% block body %}
@@ -18,7 +18,7 @@
     </div>
 </div>
 
-<a class="btn btn-primary" href="/assessment_page_1">Begin Self-Assessment</a>
+<a class="btn btn-primary" href="/do_assessment_page_1">Begin Self-Assessment</a>
 <p></p>
 
 <div>
@@ -36,18 +36,15 @@
             <th></th>
             <th></th>
         </tr>
-        {% for crosssell in crosssells %}
+        {% for assessment in assessments %}
         <tr>
-            <td>{{crosssell.id}}</td>
-            <td>{{crosssell.name}}</td>
-            <!-- <td>{{crosssell.pf_number}}</td> -->
-            <!-- <td>{{crosssell.customer_account}}</td> -->
-            <td>{{crosssell.product}}</td>
-            <!-- <td>{{crosssell.crosssell_type}}</td> -->
-            <td>{{crosssell.submission_date}}</td>
-            <td><a href="edit_crosssell/{{crosssell.id}}" class="btn btn-info" pull-right>Edit</a></td>
+            <td>{{assessment.id}}</td>
+            <td>{{assessment.name}}</td>
+            <td>{{assessment.product}}</td>
+            <td>{{assessment.submission_date}}</td>
+            <td><a href="/edit_assessment_page_1/{{assessment.id}}" class="btn btn-info" pull-right>Edit</a></td>
             <td>
-                <form action="{{url_for('delete_crosssell', id=crosssell.id)}}" method='post'>
+                <form action="{{url_for('delete_assessment', id=assessment.id)}}" method='post'>
                     <input type="hidden" name="_method" value="DELETE">
                     <input type="submit" value="DELETE" class="btn btn-danger">
                 </form>

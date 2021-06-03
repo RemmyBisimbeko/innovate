@@ -161,8 +161,12 @@ def assessments():
     # Create  Cursor
     cur = mysql.connection.cursor()
 
+    # uname = session['username']
     # Get Assessments 
-    result = cur.execute("SELECT * FROM assessments where name = %s", ['username'])
+    result = cur.execute("SELECT * FROM assessments")
+
+    # result = cur.execute("SELECT * FROM crosssells where name = %s", uname)
+    # result = cur.execute("SELECT * FROM assessments where name = %s", session['username'])
 
     # Set Assessment Variable and set it to all in Dictionary form
     assessments = cur.fetchall()
@@ -285,7 +289,7 @@ def do_assessment_page_3():
 # Edit Assessment Page 1 Route  
 @app.route('/edit_assessment_page_1/<string:id>', methods=['GET', 'POST'])
 @is_logged_in
-def edit_crosssell(id):
+def edit_assessment_page_1(id):
 
     # Create Cursor
     cur = mysql.connection.cursor()
@@ -318,7 +322,7 @@ def edit_crosssell(id):
         cur = mysql.connection.cursor()
 
         # Execute 
-        cur.execute("UPDATE assessment SET pf_number=%s, branch=%s, customer_account=%s, product=%s, crosssell_type=%s, naration=%s WHERE id=%s", (pf_number, branch, customer_account, product, crosssell_type, naration, id))
+        cur.execute("UPDATE assessments SET pf_number=%s, branch=%s, customer_account=%s, product=%s, crosssell_type=%s, naration=%s WHERE id=%s", (pf_number, branch, customer_account, product, crosssell_type, naration, id))
 
         # Commit to DB
         mysql.connection.commit()
@@ -328,19 +332,119 @@ def edit_crosssell(id):
 
         flash('Your Assessment was updated successfully', 'success')
 
-        return redirect(url_for('dashboard_crosssells'))
+        return redirect(url_for('assessments'))
 
     return render_template('edit_assessment_page_1.html', form=form)
 
+# Edit Assessment Page 1 Route  
+@app.route('/edit_assessment_page_2/<string:id>', methods=['GET', 'POST'])
+@is_logged_in
+def edit_assessment_page_1(id):
+
+    # Create Cursor
+    cur = mysql.connection.cursor()
+
+    # Get Assessment by id
+    result = cur.execute("SELECT * FROM assessments WHERE id = %s", [id])
+
+    assessment = cur.fetchone()
+
+    # Get Form
+    form = AssessmentForm(request.form)
+
+    # Populate Assessment form fields
+    form.pf_number.data = assessment['pf_number']
+    form.branch.data = assessment['branch']
+    form.customer_account.data = assessment['customer_account']
+    form.product.data = assessment['product']
+    form.crosssell_type.data = assessment['crosssell_type']
+    form.naration.data = assessment['naration']
+
+    if request.method == 'POST' and form.validate():
+        pf_number = request.form['pf_number']
+        branch = request.form['branch']
+        customer_account = request.form['customer_account']
+        product = request.form['product']
+        crosssell_type = request.form['crosssell_type']
+        naration = request.form['naration']
+
+        # Create Cursor
+        cur = mysql.connection.cursor()
+
+        # Execute 
+        cur.execute("UPDATE assessments SET pf_number=%s, branch=%s, customer_account=%s, product=%s, crosssell_type=%s, naration=%s WHERE id=%s", (pf_number, branch, customer_account, product, crosssell_type, naration, id))
+
+        # Commit to DB
+        mysql.connection.commit()
+
+        # Close Connection
+        cur.close()
+
+        flash('Your Assessment was updated successfully', 'success')
+
+        return redirect(url_for('edit_assessment_page_3'))
+
+    return render_template('edit_assessment_page_2.html', form=form)
+
+# Edit Assessment Page 1 Route  
+@app.route('/edit_assessment_page_3/<string:id>', methods=['GET', 'POST'])
+@is_logged_in
+def edit_assessment_page_1(id):
+
+    # Create Cursor
+    cur = mysql.connection.cursor()
+
+    # Get Assessment by id
+    result = cur.execute("SELECT * FROM assessments WHERE id = %s", [id])
+
+    assessment = cur.fetchone()
+
+    # Get Form
+    form = AssessmentForm(request.form)
+
+    # Populate Assessment form fields
+    form.pf_number.data = assessment['pf_number']
+    form.branch.data = assessment['branch']
+    form.customer_account.data = assessment['customer_account']
+    form.product.data = assessment['product']
+    form.crosssell_type.data = assessment['crosssell_type']
+    form.naration.data = assessment['naration']
+
+    if request.method == 'POST' and form.validate():
+        pf_number = request.form['pf_number']
+        branch = request.form['branch']
+        customer_account = request.form['customer_account']
+        product = request.form['product']
+        crosssell_type = request.form['crosssell_type']
+        naration = request.form['naration']
+
+        # Create Cursor
+        cur = mysql.connection.cursor()
+
+        # Execute 
+        cur.execute("UPDATE assessments SET pf_number=%s, branch=%s, customer_account=%s, product=%s, crosssell_type=%s, naration=%s WHERE id=%s", (pf_number, branch, customer_account, product, crosssell_type, naration, id))
+
+        # Commit to DB
+        mysql.connection.commit()
+
+        # Close Connection
+        cur.close()
+
+        flash('Your Assessment was updated successfully', 'success')
+
+        return redirect(url_for('assessments'))
+
+    return render_template('edit_assessment_page_3.html', form=form)
+
 # Delete Assessment
-@app.route('/delete_crosssell/<string:id>', methods=['POST'])
+@app.route('/delete_assessment/<string:id>', methods=['POST'])
 @is_logged_in 
-def delete_crosssell(id):
+def delete_assessment(id):
     # Create Cursor
         cur = mysql.connection.cursor()
 
         # Execute 
-        cur.execute("DELETE FROM crosssells WHERE id=%s", [id])
+        cur.execute("DELETE FROM assessments WHERE id=%s", [id])
 
         # Commit to DB
         mysql.connection.commit()
@@ -350,7 +454,7 @@ def delete_crosssell(id):
 
         flash('Your Assessment was deleted successfully', 'success')
 
-        return redirect(url_for('dashboard_crosssells'))
+        return redirect(url_for('assessments'))
 
 # Run Server
 if __name__ == '__main__':
