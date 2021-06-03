@@ -242,7 +242,7 @@ def do_assessment():
 
         return redirect(url_for('dashboard_crosssells'))
 
-    return render_template('do_assessment_page_2.html', form=form)
+    return render_template('do_assessment.html', form=form)
 
 # Do Assessment - Page 3 Route  
 @app.route('/do_assessment_page_3', methods=['GET', 'POST'])
