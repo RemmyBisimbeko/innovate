@@ -34,27 +34,6 @@ def home():
 def about():
     return render_template('about.html')
 
-# Assessments Route
-@app.route('/assessments')
-def assessments():
-    # Create  Cursor
-    cur = mysql.connection.cursor()
-
-    # Get Assessments
-    result = cur.execute("SELECT * FROM assessments")
-
-    # Set Assessment Variable and set it to all in Dictionary form
-    assessments = cur.fetchall()
-
-    if result > 0:
-        return render_template('assessments.html', assessments=assessments)
-    else:
-        msg = 'No Assessments Yet'
-        return render_template('assessments.html', msg=msg)
-
-    # Close Connection
-    cur.close()
-
 # Single Assessment Route
 @app.route('/assessment/<string:id>')
 def assessment(id):
@@ -175,33 +154,27 @@ def logout():
     flash('You are now logged out', 'success')
     return redirect(url_for('login'))
 
-# Assessment Dashboard Route
-@app.route('/dashboard_crosssells')
+# Assessments Route
+@app.route('/assessments')
 @is_logged_in
-def dashboard_crosssells():
+def assessments():
     # Create  Cursor
     cur = mysql.connection.cursor()
 
     # Get Assessments 
-    result = cur.execute("SELECT * FROM crosssells where name= %s", session['username'])
+    result = cur.execute("SELECT * FROM assessments where name = %s", ['username'])
 
     # Set Assessment Variable and set it to all in Dictionary form
-    crosssells = cur.fetchall()
+    assessments = cur.fetchall()
 
     if result > 0:
-        return render_template('dashboard_crosssells.html', crosssells=crosssells)
+        return render_template('assessments.html', assessments=assessments)
     else:
         msg = 'No Assessments Yet'
-        return render_template('dashboard_crosssells.html', msg=msg)
+        return render_template('assessments.html', msg=msg)
 
     # Close Connection
     cur.close()
-
-# Dashboard Route
-@app.route('/dashboard')
-@is_logged_in
-def dashboard():
-    return render_template('dashboard.html')
 
 # Add Assessment Form Class
 class AssessmentForm(Form):
@@ -212,10 +185,10 @@ class AssessmentForm(Form):
     crosssell_type = StringField('crosssell_type', [validators.Length(min=1, max=20)])
     naration = TextAreaField('naration', [validators.Length(min=10)])
 
-# Do Assessment Route  
-@app.route('/do_assessment', methods=['GET', 'POST'])
+# Do Assessment - Page 1 Route  
+@app.route('/do_assessment_page_1', methods=['GET', 'POST'])
 @is_logged_in
-def do_assessment():
+def do_assessment_page_1():
     form = AssessmentForm(request.form)
     if request.method == 'POST' and form.validate():
         pf_number = form.pf_number.data
@@ -240,9 +213,42 @@ def do_assessment():
 
         flash('Page 1 was completed successfully', 'success')
 
-        return redirect(url_for('dashboard_crosssells'))
+        return redirect(url_for('do_assessment_page_2'))
 
-    return render_template('do_assessment.html', form=form)
+    return render_template('do_assessment_page_1.html', form=form)
+
+# Do Assessment - Page 2 Route  
+@app.route('/do_assessment_page_2', methods=['GET', 'POST'])
+@is_logged_in
+def do_assessment_page_2():
+    form = AssessmentForm(request.form)
+    if request.method == 'POST' and form.validate():
+        pf_number = form.pf_number.data
+        branch = form.branch.data
+        customer_account = form.customer_account.data
+        product = form.product.data
+        crosssell_type = form.crosssell_type.data
+        naration = form.naration.data
+        # submission_date = form.submission_date.data
+
+        # Create Cursor
+        cur = mysql.connection.cursor()
+
+        # Execute 
+        cur.execute("INSERT INTO assessments(pf_number, branch, customer_account, product, crosssell_type, naration, name) VALUES(%s, %s, %s, %s, %s, %s, %s)", (pf_number, branch, customer_account, product, crosssell_type, naration, session['username']))
+
+        # Commit to DB
+        mysql.connection.commit()
+
+        # Close Connection
+        cur.close()
+
+        flash('Page 1 was completed successfully', 'success')
+
+        return redirect(url_for('do_assessment_page_3'))
+
+    return render_template('do_assessment_page_2.html', form=form)
+
 
 # Do Assessment - Page 3 Route  
 @app.route('/do_assessment_page_3', methods=['GET', 'POST'])
@@ -274,10 +280,10 @@ def do_assessment_page_3():
 
         return redirect(url_for('dashboard_crosssells'))
 
-    return render_template('do_assessment.html', form=form)
+    return render_template('do_assessment_page_3.html', form=form)
 
-# Edit Crosssell Route  
-@app.route('/edit_crosssell/<string:id>', methods=['GET', 'POST'])
+# Edit Assessment Page 1 Route  
+@app.route('/edit_assessment_page_1/<string:id>', methods=['GET', 'POST'])
 @is_logged_in
 def edit_crosssell(id):
 
@@ -285,20 +291,20 @@ def edit_crosssell(id):
     cur = mysql.connection.cursor()
 
     # Get Assessment by id
-    result = cur.execute("SELECT * FROM crosssells WHERE id = %s", [id])
+    result = cur.execute("SELECT * FROM assessments WHERE id = %s", [id])
 
-    crosssell = cur.fetchone()
+    assessment = cur.fetchone()
 
     # Get Form
     form = AssessmentForm(request.form)
 
     # Populate Assessment form fields
-    form.pf_number.data = crosssell['pf_number']
-    form.branch.data = crosssell['branch']
-    form.customer_account.data = crosssell['customer_account']
-    form.product.data = crosssell['product']
-    form.crosssell_type.data = crosssell['crosssell_type']
-    form.naration.data = crosssell['naration']
+    form.pf_number.data = assessment['pf_number']
+    form.branch.data = assessment['branch']
+    form.customer_account.data = assessment['customer_account']
+    form.product.data = assessment['product']
+    form.crosssell_type.data = assessment['crosssell_type']
+    form.naration.data = assessment['naration']
 
     if request.method == 'POST' and form.validate():
         pf_number = request.form['pf_number']
@@ -307,14 +313,12 @@ def edit_crosssell(id):
         product = request.form['product']
         crosssell_type = request.form['crosssell_type']
         naration = request.form['naration']
-        # submission_date = '2020-08-31 23:38:49'
-        # name = session['username']
 
         # Create Cursor
         cur = mysql.connection.cursor()
 
         # Execute 
-        cur.execute("UPDATE crosssells SET pf_number=%s, branch=%s, customer_account=%s, product=%s, crosssell_type=%s, naration=%s WHERE id=%s", (pf_number, branch, customer_account, product, crosssell_type, naration, id))
+        cur.execute("UPDATE assessment SET pf_number=%s, branch=%s, customer_account=%s, product=%s, crosssell_type=%s, naration=%s WHERE id=%s", (pf_number, branch, customer_account, product, crosssell_type, naration, id))
 
         # Commit to DB
         mysql.connection.commit()
@@ -326,7 +330,7 @@ def edit_crosssell(id):
 
         return redirect(url_for('dashboard_crosssells'))
 
-    return render_template('edit_crosssell.html', form=form)
+    return render_template('edit_assessment_page_1.html', form=form)
 
 # Delete Assessment
 @app.route('/delete_crosssell/<string:id>', methods=['POST'])
