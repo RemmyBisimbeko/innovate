@@ -60,12 +60,6 @@ CREATE TABLE assessments(id INT(11) AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50)
 CREATE TABLE enrollments(id INT(11) AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), account VARCHAR(50), branch VARCHAR(30), telephone VARCHAR(30), email VARCHAR(50), officer VARCHAR(50), reason VARCHAR(255), submission_date DATE);
 --Cross Sell Table
 CREATE TABLE crosssells(id INT(11) AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), pf_number VARCHAR(6), branch VARCHAR(30), customer_account VARCHAR(50), product VARCHAR(30),crosssell_type VARCHAR(30), naration VARCHAR(255), submission_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
---Applications Table
-CREATE TABLE applications(id INT(11) AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), account VARCHAR(50), branch VARCHAR(30), telephone VARCHAR(30), email VARCHAR(50), officer VARCHAR(50), reason VARCHAR(255), submission_date DATE);
---hrissues
-CREATE TABLE hrissues(id INT(11) AUTO_INCREMENT PRIMARY KEY, issue_type VARCHAR(50), name VARCHAR(50), pf_number VARCHAR(6), branch VARCHAR(30), topic VARCHAR(30), hrissue VARCHAR(255), submission_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
---restructures Table
-CREATE TABLE restructures(id INT(11) AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), account VARCHAR(50), branch VARCHAR(30), telephone VARCHAR(30), email VARCHAR(50), officer VARCHAR(50), reason VARCHAR(255), submission_date DATE);
 
 --insert into crosssells
 "INSERT INTO crosssells(pf_number, branch, customer_account, product, crosssell_type, naration, submission_date, name)
@@ -102,9 +96,14 @@ PassLib for Hasjing Passwords
 $ pip install passlib
 
 
-mysql://ba0f988603553d:d04581fa@us-cdbr-east-03.cleardb.com/heroku_e0a2a7447beb862?reconnect=true
+mysql://b0879d223bb4e0:8c20cbbc@us-cdbr-east-04.cleardb.com/heroku_9797e661ded6065?reconnect=true
 
-
+80%> Excellent
+70-79% Satisfactory
+60-69% Fair
+50-59% Needs Improvement
+40-49% Poor 
+30-39% Very Poor 
 
 
 
