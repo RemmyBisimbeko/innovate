@@ -161,12 +161,10 @@ def assessments():
     # Create  Cursor
     cur = mysql.connection.cursor()
 
-    # uname = session['username']
     # Get Assessments 
-    result = cur.execute("SELECT * FROM assessments")
+    # result = cur.execute("SELECT * FROM assessments")
 
-    # result = cur.execute("SELECT * FROM crosssells where name = %s", uname)
-    # result = cur.execute("SELECT * FROM assessments where name = %s", session['username'])
+    result = cur.execute("SELECT * FROM assessments")
 
     # Set Assessment Variable and set it to all in Dictionary form
     assessments = cur.fetchall()
@@ -336,10 +334,10 @@ def edit_assessment_page_1(id):
 
     return render_template('edit_assessment_page_1.html', form=form)
 
-# Edit Assessment Page 1 Route  
+# Edit Assessment Page 2 Route  
 @app.route('/edit_assessment_page_2/<string:id>', methods=['GET', 'POST'])
 @is_logged_in
-def edit_assessment_page_1(id):
+def edit_assessment_page_2(id):
 
     # Create Cursor
     cur = mysql.connection.cursor()
@@ -389,7 +387,7 @@ def edit_assessment_page_1(id):
 # Edit Assessment Page 1 Route  
 @app.route('/edit_assessment_page_3/<string:id>', methods=['GET', 'POST'])
 @is_logged_in
-def edit_assessment_page_1(id):
+def edit_assessment_page_3(id):
 
     # Create Cursor
     cur = mysql.connection.cursor()
