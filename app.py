@@ -142,7 +142,7 @@ def is_logged_in(f):
         if 'logged_in' in session:
             return f(*args, **kwargs)
         else:
-            flash('This action is not Authorised, Please login', 'danger')
+            flash('This action is not Authorised, Please login first', 'danger')
             return redirect(url_for('login'))
     return wrap
 
@@ -181,11 +181,13 @@ def assessments():
 # Add Assessment Form Class
 class AssessmentForm(Form):
     pf_number = StringField('pf_number', [validators.Length(min=1, max=6)])
-    branch = StringField('branch', [validators.Length(min=1, max=50)])
-    customer_account = StringField('customer_account', [validators.Length(min=1, max=20)])
-    product = StringField('product', [validators.Length(min=1, max=20)])
-    crosssell_type = StringField('crosssell_type', [validators.Length(min=1, max=20)])
-    naration = TextAreaField('naration', [validators.Length(min=10)])
+    unit_branch = StringField('unit_branch', [validators.Length(min=1, max=30)])
+    weaknesses = TextAreaField('weaknesses', [validators.Length(min=1, max=255)])
+    self_score = StringField('self_score', [validators.Length(min=1, max=30)])
+    innovation_idea = TextAreaField('innovation_idea', [validators.Length(min=1, max=255)])
+    team_members = TextAreaField('team_members', [validators.Length(min=1, max=255)])
+    estimated_cost = StringField('estimated_cost', [validators.Length(min=1, max=30)])
+    suggestions = TextAreaField('suggestions', [validators.Length(min=1, max=255)])
 
 # Do Assessment - Page 1 Route  
 @app.route('/do_assessment_page_1', methods=['GET', 'POST'])
@@ -194,18 +196,20 @@ def do_assessment_page_1():
     form = AssessmentForm(request.form)
     if request.method == 'POST' and form.validate():
         pf_number = form.pf_number.data
-        branch = form.branch.data
-        customer_account = form.customer_account.data
-        product = form.product.data
-        crosssell_type = form.crosssell_type.data
-        naration = form.naration.data
+        unit_branch = form.unit_branch.data
+        weaknesses = form.weaknesses.data
+        self_score = form.self_score.data
+        innovation_idea = form.innovation_idea.data
+        team_members = form.team_members.data
+        estimated_cost = form.estimated_cost.data
+        suggestions = form.suggestions.data
         # submission_date = form.submission_date.data
 
         # Create Cursor
         cur = mysql.connection.cursor()
 
         # Execute 
-        cur.execute("INSERT INTO assessments(pf_number, branch, customer_account, product, crosssell_type, naration, name) VALUES(%s, %s, %s, %s, %s, %s, %s)", (pf_number, branch, customer_account, product, crosssell_type, naration, session['username']))
+        cur.execute("INSERT INTO assessments(pf_number, unit_branch, weaknesses, self_score, innovation_idea, team_members, estimated_cost, suggestions, name) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)", (pf_number, unit_branch, weaknesses, self_score, innovation_idea, team_members, estimated_cost, suggestions, session['username']))
 
         # Commit to DB
         mysql.connection.commit()
@@ -226,18 +230,20 @@ def do_assessment_page_2():
     form = AssessmentForm(request.form)
     if request.method == 'POST' and form.validate():
         pf_number = form.pf_number.data
-        branch = form.branch.data
-        customer_account = form.customer_account.data
-        product = form.product.data
-        crosssell_type = form.crosssell_type.data
-        naration = form.naration.data
+        unit_branch = form.unit_branch.data
+        weaknesses = form.weaknesses.data
+        self_score = form.self_score.data
+        innovation_idea = form.innovation_idea.data
+        team_members = form.team_members.data
+        estimated_cost = form.estimated_cost.data
+        suggestions = form.suggestions.data
         # submission_date = form.submission_date.data
 
         # Create Cursor
         cur = mysql.connection.cursor()
 
         # Execute 
-        cur.execute("INSERT INTO assessments(pf_number, branch, customer_account, product, crosssell_type, naration, name) VALUES(%s, %s, %s, %s, %s, %s, %s)", (pf_number, branch, customer_account, product, crosssell_type, naration, session['username']))
+        cur.execute("INSERT INTO assessments(pf_number, unit_branch, weaknesses, self_score, innovation_idea, team_members, estimated_cost, suggestions, name) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)", (pf_number, unit_branch, weaknesses, self_score, innovation_idea, team_members, estimated_cost, suggestions, session['username']))
 
         # Commit to DB
         mysql.connection.commit()
@@ -259,18 +265,20 @@ def do_assessment_page_3():
     form = AssessmentForm(request.form)
     if request.method == 'POST' and form.validate():
         pf_number = form.pf_number.data
-        branch = form.branch.data
-        customer_account = form.customer_account.data
-        product = form.product.data
-        crosssell_type = form.crosssell_type.data
-        naration = form.naration.data
+        unit_branch = form.unit_branch.data
+        weaknesses = form.weaknesses.data
+        self_score = form.self_score.data
+        innovation_idea = form.innovation_idea.data
+        team_members = form.team_members.data
+        estimated_cost = form.estimated_cost.data
+        suggestions = form.suggestions.data
         # submission_date = form.submission_date.data
 
         # Create Cursor
         cur = mysql.connection.cursor()
 
         # Execute 
-        cur.execute("INSERT INTO assessments(pf_number, branch, customer_account, product, crosssell_type, naration, name) VALUES(%s, %s, %s, %s, %s, %s, %s)", (pf_number, branch, customer_account, product, crosssell_type, naration, session['username']))
+        cur.execute("INSERT INTO assessments(pf_number, unit_branch, weaknesses, self_score, innovation_idea, team_members, estimated_cost, suggestions, name) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)", (pf_number, unit_branch, weaknesses, self_score, innovation_idea, team_members, estimated_cost, suggestions, session['username']))
 
         # Commit to DB
         mysql.connection.commit()
