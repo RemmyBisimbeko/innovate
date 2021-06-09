@@ -182,21 +182,23 @@ def assessments():
 class AssessmentForm(Form):
     pf_number = StringField('pf_number', [validators.Length(min=1, max=6)])
     unit_branch = StringField('unit_branch', [validators.Length(min=1, max=30)])
+    designation = StringField('designation', [validators.Length(min=1, max=30)])
     weaknesses = TextAreaField('weaknesses', [validators.Length(min=1, max=255)])
-    self_score = StringField('self_score', [validators.Length(min=1, max=30)])
+    self_score = StringField('self_score', [validators.Length(min=1, max=2)])
     innovation_idea = TextAreaField('innovation_idea', [validators.Length(min=1, max=255)])
     team_members = TextAreaField('team_members', [validators.Length(min=1, max=255)])
     estimated_cost = StringField('estimated_cost', [validators.Length(min=1, max=30)])
     suggestions = TextAreaField('suggestions', [validators.Length(min=1, max=255)])
 
 # Do Assessment - Page 1 Route  
-@app.route('/do_assessment_page_1', methods=['GET', 'POST'])
+@app.route('/do_assessment', methods=['GET', 'POST'])
 @is_logged_in
-def do_assessment_page_1():
+def do_assessment():
     form = AssessmentForm(request.form)
     if request.method == 'POST' and form.validate():
         pf_number = form.pf_number.data
         unit_branch = form.unit_branch.data
+        designation = form.designation.data
         weaknesses = form.weaknesses.data
         self_score = form.self_score.data
         innovation_idea = form.innovation_idea.data
@@ -209,7 +211,7 @@ def do_assessment_page_1():
         cur = mysql.connection.cursor()
 
         # Execute 
-        cur.execute("INSERT INTO assessments(pf_number, unit_branch, weaknesses, self_score, innovation_idea, team_members, estimated_cost, suggestions, name) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)", (pf_number, unit_branch, weaknesses, self_score, innovation_idea, team_members, estimated_cost, suggestions, session['username']))
+        cur.execute("INSERT INTO assessments(pf_number, unit_branch, designation, weaknesses, self_score, innovation_idea, team_members, estimated_cost, suggestions, name) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (pf_number, unit_branch, designation, weaknesses, self_score, innovation_idea, team_members, estimated_cost, suggestions, session['username']))
 
         # Commit to DB
         mysql.connection.commit()
@@ -217,85 +219,16 @@ def do_assessment_page_1():
         # Close Connection
         cur.close()
 
-        flash('Page 1 was completed successfully', 'success')
+        flash('Assessment was completed successfully', 'success')
 
-        return redirect(url_for('do_assessment_page_2'))
+        return redirect(url_for('assessments'))
 
-    return render_template('do_assessment_page_1.html', form=form)
+    return render_template('do_assessment.html', form=form)
 
-# Do Assessment - Page 2 Route  
-@app.route('/do_assessment_page_2', methods=['GET', 'POST'])
+# Edit Assessment Route  
+@app.route('/edit_assessment/<string:id>', methods=['GET', 'POST'])
 @is_logged_in
-def do_assessment_page_2():
-    form = AssessmentForm(request.form)
-    if request.method == 'POST' and form.validate():
-        pf_number = form.pf_number.data
-        unit_branch = form.unit_branch.data
-        weaknesses = form.weaknesses.data
-        self_score = form.self_score.data
-        innovation_idea = form.innovation_idea.data
-        team_members = form.team_members.data
-        estimated_cost = form.estimated_cost.data
-        suggestions = form.suggestions.data
-        # submission_date = form.submission_date.data
-
-        # Create Cursor
-        cur = mysql.connection.cursor()
-
-        # Execute 
-        cur.execute("INSERT INTO assessments(pf_number, unit_branch, weaknesses, self_score, innovation_idea, team_members, estimated_cost, suggestions, name) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)", (pf_number, unit_branch, weaknesses, self_score, innovation_idea, team_members, estimated_cost, suggestions, session['username']))
-
-        # Commit to DB
-        mysql.connection.commit()
-
-        # Close Connection
-        cur.close()
-
-        flash('Page 1 was completed successfully', 'success')
-
-        return redirect(url_for('do_assessment_page_3'))
-
-    return render_template('do_assessment_page_2.html', form=form)
-
-
-# Do Assessment - Page 3 Route  
-@app.route('/do_assessment_page_3', methods=['GET', 'POST'])
-@is_logged_in
-def do_assessment_page_3():
-    form = AssessmentForm(request.form)
-    if request.method == 'POST' and form.validate():
-        pf_number = form.pf_number.data
-        unit_branch = form.unit_branch.data
-        weaknesses = form.weaknesses.data
-        self_score = form.self_score.data
-        innovation_idea = form.innovation_idea.data
-        team_members = form.team_members.data
-        estimated_cost = form.estimated_cost.data
-        suggestions = form.suggestions.data
-        # submission_date = form.submission_date.data
-
-        # Create Cursor
-        cur = mysql.connection.cursor()
-
-        # Execute 
-        cur.execute("INSERT INTO assessments(pf_number, unit_branch, weaknesses, self_score, innovation_idea, team_members, estimated_cost, suggestions, name) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)", (pf_number, unit_branch, weaknesses, self_score, innovation_idea, team_members, estimated_cost, suggestions, session['username']))
-
-        # Commit to DB
-        mysql.connection.commit()
-
-        # Close Connection
-        cur.close()
-
-        flash('Your Assessment was captured successfully', 'success')
-
-        return redirect(url_for('dashboard_crosssells'))
-
-    return render_template('do_assessment_page_3.html', form=form)
-
-# Edit Assessment Page 1 Route  
-@app.route('/edit_assessment_page_1/<string:id>', methods=['GET', 'POST'])
-@is_logged_in
-def edit_assessment_page_1(id):
+def edit_assessment(id):
 
     # Create Cursor
     cur = mysql.connection.cursor()
@@ -310,25 +243,31 @@ def edit_assessment_page_1(id):
 
     # Populate Assessment form fields
     form.pf_number.data = assessment['pf_number']
-    form.branch.data = assessment['branch']
-    form.customer_account.data = assessment['customer_account']
-    form.product.data = assessment['product']
-    form.crosssell_type.data = assessment['crosssell_type']
-    form.naration.data = assessment['naration']
+    form.unit_branch.data = assessment['unit_branch']
+    form.designation.data = assessment['designation']
+    form.weaknesses.data = assessment['weaknesses']
+    form.self_score.data = assessment['self_score']
+    form.innovation_idea.data = assessment['innovation_idea']
+    form.team_members.data = assessment['team_members']
+    form.estimated_cost.data = assessment['estimated_cost']
+    form.suggestions.data = assessment['suggestions']
 
     if request.method == 'POST' and form.validate():
         pf_number = request.form['pf_number']
-        branch = request.form['branch']
-        customer_account = request.form['customer_account']
-        product = request.form['product']
-        crosssell_type = request.form['crosssell_type']
-        naration = request.form['naration']
+        unit_branch = request.form['unit_branch']
+        designation = request.form['designation']
+        weaknesses = request.form['weaknesses']
+        self_score = request.form['self_score']
+        innovation_idea = request.form['innovation_idea']
+        team_members = request.form['team_members']
+        estimated_cost = request.form['estimated_cost']
+        suggestions = request.form['suggestions']
 
         # Create Cursor
         cur = mysql.connection.cursor()
 
         # Execute 
-        cur.execute("UPDATE assessments SET pf_number=%s, branch=%s, customer_account=%s, product=%s, crosssell_type=%s, naration=%s WHERE id=%s", (pf_number, branch, customer_account, product, crosssell_type, naration, id))
+        cur.execute("UPDATE assessments SET pf_number=%s, unit_branch=%s, designation=%s, weaknesses=%s, self_score=%s, innovation_idea=%s, team_members=%s, estimated_cost=%s, suggestions=%s WHERE id=%s", (pf_number, unit_branch, designation, weaknesses, self_score, innovation_idea, team_members, estimated_cost, suggestions, id))
 
         # Commit to DB
         mysql.connection.commit()
@@ -340,107 +279,7 @@ def edit_assessment_page_1(id):
 
         return redirect(url_for('assessments'))
 
-    return render_template('edit_assessment_page_1.html', form=form)
-
-# Edit Assessment Page 2 Route  
-@app.route('/edit_assessment_page_2/<string:id>', methods=['GET', 'POST'])
-@is_logged_in
-def edit_assessment_page_2(id):
-
-    # Create Cursor
-    cur = mysql.connection.cursor()
-
-    # Get Assessment by id
-    result = cur.execute("SELECT * FROM assessments WHERE id = %s", [id])
-
-    assessment = cur.fetchone()
-
-    # Get Form
-    form = AssessmentForm(request.form)
-
-    # Populate Assessment form fields
-    form.pf_number.data = assessment['pf_number']
-    form.branch.data = assessment['branch']
-    form.customer_account.data = assessment['customer_account']
-    form.product.data = assessment['product']
-    form.crosssell_type.data = assessment['crosssell_type']
-    form.naration.data = assessment['naration']
-
-    if request.method == 'POST' and form.validate():
-        pf_number = request.form['pf_number']
-        branch = request.form['branch']
-        customer_account = request.form['customer_account']
-        product = request.form['product']
-        crosssell_type = request.form['crosssell_type']
-        naration = request.form['naration']
-
-        # Create Cursor
-        cur = mysql.connection.cursor()
-
-        # Execute 
-        cur.execute("UPDATE assessments SET pf_number=%s, branch=%s, customer_account=%s, product=%s, crosssell_type=%s, naration=%s WHERE id=%s", (pf_number, branch, customer_account, product, crosssell_type, naration, id))
-
-        # Commit to DB
-        mysql.connection.commit()
-
-        # Close Connection
-        cur.close()
-
-        flash('Your Assessment was updated successfully', 'success')
-
-        return redirect(url_for('edit_assessment_page_3'))
-
-    return render_template('edit_assessment_page_2.html', form=form)
-
-# Edit Assessment Page 1 Route  
-@app.route('/edit_assessment_page_3/<string:id>', methods=['GET', 'POST'])
-@is_logged_in
-def edit_assessment_page_3(id):
-
-    # Create Cursor
-    cur = mysql.connection.cursor()
-
-    # Get Assessment by id
-    result = cur.execute("SELECT * FROM assessments WHERE id = %s", [id])
-
-    assessment = cur.fetchone()
-
-    # Get Form
-    form = AssessmentForm(request.form)
-
-    # Populate Assessment form fields
-    form.pf_number.data = assessment['pf_number']
-    form.branch.data = assessment['branch']
-    form.customer_account.data = assessment['customer_account']
-    form.product.data = assessment['product']
-    form.crosssell_type.data = assessment['crosssell_type']
-    form.naration.data = assessment['naration']
-
-    if request.method == 'POST' and form.validate():
-        pf_number = request.form['pf_number']
-        branch = request.form['branch']
-        customer_account = request.form['customer_account']
-        product = request.form['product']
-        crosssell_type = request.form['crosssell_type']
-        naration = request.form['naration']
-
-        # Create Cursor
-        cur = mysql.connection.cursor()
-
-        # Execute 
-        cur.execute("UPDATE assessments SET pf_number=%s, branch=%s, customer_account=%s, product=%s, crosssell_type=%s, naration=%s WHERE id=%s", (pf_number, branch, customer_account, product, crosssell_type, naration, id))
-
-        # Commit to DB
-        mysql.connection.commit()
-
-        # Close Connection
-        cur.close()
-
-        flash('Your Assessment was updated successfully', 'success')
-
-        return redirect(url_for('assessments'))
-
-    return render_template('edit_assessment_page_3.html', form=form)
+    return render_template('edit_assessment.html', form=form)
 
 # Delete Assessment
 @app.route('/delete_assessment/<string:id>', methods=['POST'])

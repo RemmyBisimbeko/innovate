@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="container">
+    <h1>Self Assessment</h1>
+  <p class="lead text-primary">Personal Data</p>
+  
+
+  {% from "includes/_formhelpers.html" import render_field %}
+  <form method="POST" action="">
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                {{ render_field(form.pf_number, class_="form-control", placeholder='e.g. BR4805') }}
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                {{ render_field(form.unit_branch, class_="form-control", placeholder='e.g. Kayabwe or Finance') }}
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        {{ render_field(form.designation, class_="form-control", placeholder='e.g. Chief Manager Innovations') }}
+    </div>
+
+    <p class="lead text-primary">Personal Assessment</p>
+
+    <div class="form-group">
+      {{ render_field(form.weaknesses, class_="form-control", id="editor") }}
+    </div>
+    <div class="form-group">
+        {{ render_field(form.self_score, class_="form-control", placeholder="e.g 1 - 10") }}
+    </div>
+
+    <p class="lead text-primary">Innovation Contribution</p>
+
+    <div class="form-group">
+        {{ render_field(form.innovation_idea, class_="form-control", id="editor2", placeholder="Digital Register") }}
+    </div>
+  
+    <div class="form-group">
+        {{ render_field(form.team_members, class_="form-control", id="editor3") }}
+    </div>
+
+    <div class="form-group">
+        {{ render_field(form.estimated_cost, class_="form-control", placeholder="UGX 1,000,000") }}
+    </div>
+
+    <div class="form-group">
+        {{ render_field(form.suggestions, class_="form-control", id="editor4") }}
+    </div>
+
+    <p><input type="submit" class="btn btn-success" value="Update"></p>
+
+  
+    </form>
+    
+  </div>  
+{% endblock %}
